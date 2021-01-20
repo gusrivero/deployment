@@ -33,3 +33,4 @@ jobs:
       - uses: crazy-max/ghaction-docker-meta@v1
         with:
           images: ghcr.io/trifoliumproj/deployment/${{ env.IMAGE }}
+          tag-sha: true
