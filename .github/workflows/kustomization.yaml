@@ -27,16 +27,28 @@ jobs:
           submodules: true
           path: ./${{ env.REPO }}
       - run: |
-          cd ./deployment
           case ${{ env.REPO }} in
             nh)
-              sh ./build-scripts/nh.sh
               ;;
 
             *)
+              exit 1
               ;;
           esac
       - uses: crazy-max/ghaction-docker-meta@v1
+        id: docker_meta
         with:
           images: ghcr.io/trifoliumproj/deployment/${{ env.IMAGE }}
           tag-sha: true
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: dodoco-bot
+          password: ${{ secrets.DODOCO_BOT_PAT_GHCR }}
+      - uses: docker/build-push-action@v2
+        id: docker_build
+        with:
+          context: ../${{ env.REPO }}
+          file: ./dockerfiles/${{ env.REPO }}.Dockerfile
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
