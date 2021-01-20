@@ -56,3 +56,4 @@ jobs:
           file: ./deployment/dockerfiles/${{ env.REPO }}.Dockerfile
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
+          push: true
