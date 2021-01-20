@@ -12,4 +12,5 @@ jobs:
           token: ${{ secrets.DODOCO_BOT_PAT }}
           ref: ${{ github.event.client_payload.ref }}
           fetch-depth: 0
+          submodules: true
       - run: echo ${{ github.event.client_payload.sha }}
