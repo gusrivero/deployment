@@ -13,4 +13,22 @@ jobs:
           ref: ${{ github.event.client_payload.ref }}
           fetch-depth: 0
           submodules: true
-      - run: echo ${{ github.event.client_payload.sha }}
+      - run: |
+          echo "REPO=${{ github.event.client_payload.repository }}" >> $GITHUB_ENV
+          echo "BRANCH=$(node -p "'${{ github.event.client_payload.ref }}'.split('/').slice(-1)[0]")" >> $GITHUB_ENV
+      - run: |
+          echo "IMAGE=${{ env.REPO }}-${{ env.BRANCH }}" >> $GITHUB_ENV
+      - run: |
+          echo ${{ env.REPO }}
+          echo ${{ env.BRANCH }}
+          echo ${{ env.IMAGE }}
+      - run: |
+          case ${{ env.REPO }} in
+            nh)
+              ;;
+
+            *)
+              ;;
+      - uses: crazy-max/ghaction-docker-meta@v1
+        with:
+          images: ghcr.io/trifoliumproj/deployment/${{ env.IMAGE }}
