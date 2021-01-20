@@ -29,14 +29,9 @@ jobs:
           submodules: true
           path: ./${{ env.REPO }}
       - run: |
-          case ${{ env.REPO }} in
-            nh)
-              ;;
-
-            *)
-              exit 1
-              ;;
-          esac
+          if [[ "$(node -p '["api-gateway", "nh"].includes("${{ env.REPO }}")')" == "false" ]]; then
+            exit 1
+          fi
       - uses: crazy-max/ghaction-docker-meta@v1
         id: docker_meta
         with:
