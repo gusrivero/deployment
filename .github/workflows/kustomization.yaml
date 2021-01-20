@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          repository: ${{ github_event.client_payload.repository }}
+          repository: ${{ github.event.client_payload.repository }}
           token: ${{ secrets.DODOCO_BOT_PAT }}
           ref: ${{ github.event.client_payload.ref }}
           fetch-depth: 0
