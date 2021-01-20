@@ -8,11 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          repository: ${{ github.event.client_payload.repository }}
-          token: ${{ secrets.DODOCO_BOT_PAT }}
-          ref: ${{ github.event.client_payload.ref }}
-          fetch-depth: 0
-          submodules: true
+          path: ./deployment
       - run: |
           echo "REPO=$(node -p "'${{ github.event.client_payload.repository }}'.split('/').slice(-1)[0]")" >> $GITHUB_ENV
           echo "BRANCH=$(node -p "'${{ github.event.client_payload.ref }}'.split('/').slice(-1)[0]")" >> $GITHUB_ENV
@@ -22,9 +18,19 @@ jobs:
           echo ${{ env.REPO }}
           echo ${{ env.BRANCH }}
           echo ${{ env.IMAGE }}
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.client_payload.repository }}
+          token: ${{ secrets.DODOCO_BOT_PAT }}
+          ref: ${{ github.event.client_payload.ref }}
+          fetch-depth: 0
+          submodules: true
+          path: ./${{ env.REPO }}
       - run: |
+          cd ./deployment
           case ${{ env.REPO }} in
             nh)
+              sh ./build-scripts/nh.sh
               ;;
 
             *)
