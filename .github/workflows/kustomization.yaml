@@ -3,10 +3,13 @@ on:
   repository_dispatch:
     types: [kustomization]
 jobs:
-  myEvent:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
+          repository: ${{ github_event.client_payload.repository }}
+          token: ${{ secrets.DODOCO_BOT_PAT }}
           ref: ${{ github.event.client_payload.ref }}
+          fetch-depth: 0
       - run: echo ${{ github.event.client_payload.sha }}
