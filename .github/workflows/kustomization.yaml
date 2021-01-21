@@ -13,7 +13,7 @@ jobs:
           path: ./deployment
       - run: |
           echo "REPO=$(node -p "'${{ github.event.client_payload.repository }}'.split('/').slice(-1)[0]")" >> $GITHUB_ENV
-          echo "BRANCH=$(node -p "'${{ github.event.client_payload.ref }}'.split('/').slice(-1)[0]")" >> $GITHUB_ENV
+          echo "BRANCH=$(node -p "'${{ github.event.client_payload.ref }}'.split('/').slice(-1)[0].replace('master', 'prod').replace('main', 'prod')")" >> $GITHUB_ENV
       - run: |
           echo "IMAGE=${{ env.REPO }}-${{ env.BRANCH }}" >> $GITHUB_ENV
       - run: |
@@ -29,8 +29,12 @@ jobs:
           submodules: true
           path: ./${{ env.REPO }}
       - run: |
+          if [[ "$(node -p '["dev", "prod"].includes("${{ env.BRANCH }}")')" == "false" ]]; then
+              exit 1
+          fi
+
           if [[ "$(node -p '["api-gateway", "nh"].includes("${{ env.REPO }}")')" == "false" ]]; then
-            exit 1
+             exit 1
           fi
       - uses: crazy-max/ghaction-docker-meta@v1
         id: docker_meta
