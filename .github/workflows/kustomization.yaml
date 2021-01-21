@@ -33,7 +33,7 @@ jobs:
               exit 1
           fi
 
-          if [[ "$(node -p '["api-gateway", "nh"].includes("${{ env.REPO }}")')" == "false" ]]; then
+          if [[ "$(node -p '["api-gateway", "nh", "hc", "konachan"].includes("${{ env.REPO }}")')" == "false" ]]; then
              exit 1
           fi
       - uses: crazy-max/ghaction-docker-meta@v1
