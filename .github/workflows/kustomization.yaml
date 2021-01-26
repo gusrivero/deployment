@@ -36,6 +36,7 @@ jobs:
           if [[ "$(node -p '["api-gateway", "nh", "hc", "konachan"].includes("${{ env.REPO }}")')" == "false" ]]; then
              exit 1
           fi
+      - uses: docker/setup-buildx-action@v1
       - uses: crazy-max/ghaction-docker-meta@v1
         id: docker_meta
         with:
