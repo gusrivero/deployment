@@ -77,3 +77,4 @@ jobs:
           destination_branch: "main"
           github_token: ${{ secrets.DODOCO_BOT_PAT }}
           pr_reviewer: "FleeingSunlight"
+          directory: "./deployment"
