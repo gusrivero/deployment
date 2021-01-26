@@ -1,0 +1,21 @@
+apiVresion: apps/v1
+kind: Deployment
+metadata:
+  name: konachan
+  labels:
+    app: konachan
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: konachan
+  template:
+    metadata:
+      labels:
+        app: konachan
+    spec:
+      containers:
+        - name: konachan
+          image: konachan
+          ports:
+            - containerPort: 50051
