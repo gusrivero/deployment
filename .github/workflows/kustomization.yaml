@@ -11,6 +11,7 @@ jobs:
           repository: ${{ github.repository }}
           token: ${{ secrets.DODOCO_BOT_PAT }}
           path: ./deployment
+          fetch-depth: 0
       - run: |
           echo "REPO=$(node -p "'${{ github.event.client_payload.repository }}'.split('/').slice(-1)[0]")" >> $GITHUB_ENV
           echo "BRANCH=$(node -p "'${{ github.event.client_payload.ref }}'.split('/').slice(-1)[0].replace('master', 'prod').replace('main', 'prod')")" >> $GITHUB_ENV
@@ -71,10 +72,10 @@ jobs:
         with:
           github_token: ${{ secrets.DODOCO_BOT_PAT }}
           branch: deploy/${{ env.IMAGE }}
+          directory: "./deployment"
       - uses: repo-sync/pull-request@v2
         with:
           source_branch: deploy/${{ env.IMAGE }}
           destination_branch: "main"
           github_token: ${{ secrets.DODOCO_BOT_PAT }}
           pr_reviewer: "FleeingSunlight"
-          directory: "./deployment"
