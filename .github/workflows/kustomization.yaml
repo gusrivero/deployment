@@ -55,3 +55,9 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           push: true
+      - run: |
+          echo ${{ steps.docker_build.outputs.digest }}
+          cd ./deployment/hello-world/envs/${{ env.BRANCH }}/
+          pwd
+          kustomize edit set image ${{ env.REPO }}=ghcr.io/trifoliumproj/deployment/${{ env.IMAGE }}@${{ steps.docker_build.outputs.digest }}
+          cat kustomization.yaml
