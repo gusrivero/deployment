@@ -1,5 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 nameSuffix: -prod
-bases:
-  - ../../base
+resources:
+- ../../base
+images:
+- digest: sha256:02a47b3c90083115610d86ce6c1a9b1b3acf442f9dd58e1bdc42d6f59fcdf3f9
+  name: konachan
+  newName: ghcr.io/trifoliumproj/deployment/konachan-prod
