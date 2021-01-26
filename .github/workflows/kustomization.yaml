@@ -41,8 +41,6 @@ jobs:
         with:
           images: ghcr.io/trifoliumproj/deployment/${{ env.IMAGE }}
           tag-sha: true
-      - run: |
-          sh ./${{ env.REPO }}/api/gen.sh
       - uses: docker/login-action@v1
         with:
           registry: ghcr.io
