@@ -38,12 +38,12 @@ jobs:
           DEPLOY_ENVS=(dev prod)
 
           if [[ ${REPOSITORIES[*]} =~ "${{ env.GIT_REPO }}" ]]; then
-          else
+          else;
             exit 1
           fi
 
           if [[ ${DEPLOY_ENVS[*]} =~ "${{ env.DEPLOY_ENV }}" ]]; then
-          else
+          else;
             exit 1
           fi
       - run: |
