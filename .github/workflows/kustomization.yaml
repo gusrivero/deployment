@@ -85,3 +85,26 @@ jobs:
           github_token: ${{ secrets.DODOCO_BOT_PAT }}
           branch: deploy/${{ env.DOCKER_IMAGE }}-${{ env.GIT_SHA }}
           directory: "./deployment"
+  pull-request:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          echo "GIT_REPO=$(echo '${{ github.event.client_payload.repository }}' | rev | cut -d'/' -f1 | rev)" >> $GITHUB_ENV
+          GIT_BRANCH=$(echo '${{ github.event.client_payload.ref }}' | rev | cut -d'/' -f1 | rev)
+          GIT_FULL_SHA="${{ github.event.client_payload.sha }}"
+          echo "DEPLOY_ENV=${GIT_BRANCH/main/prod}" >> $GITHUB_ENV
+          echo "GIT_SHA=${GIT_FULL_SHA:0:7}" >> $GITHUB_ENV
+      - run: |
+          echo "DOCKER_IMAGE=${{ env.GIT_REPO }}-${{ env.DEPLOY_ENV }}" >> $GITHUB_ENV
+      - run: |
+          echo ${{ env.GIT_REPO }}
+          echo ${{ env.DEPLOY_ENV }}
+          echo ${{ env.DOCKER_IMAGE }}
+          echo ${{ env.GIT_SHA }}
+      - uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "deploy/${{ env.DOCKER_IMAGE }}-${{ env.GIT_SHA }}"
+          destination_branch: "main"
+          github_token: ${{ secrets.DODOCO_BOT_PAT }}
