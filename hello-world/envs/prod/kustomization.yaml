@@ -4,6 +4,6 @@ nameSuffix: -prod
 resources:
 - ../../base
 images:
-- digest: sha256:05755469537ec75fea7e517bb8bc7df0e96127f857afd7096a9c31cf40720462
+- digest: sha256:256f9570eae05a35e4abb99bc590535f42feda9613f0f0a86ec256ce9fc9fb11
   name: konachan
   newName: ghcr.io/trifoliumproj/deployment/konachan-prod
