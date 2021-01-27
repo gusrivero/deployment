@@ -18,7 +18,7 @@ jobs:
           GIT_FULL_SHA="${{ github.event.client_payload.sha }}"
           echo "GIT_SHA=${GIT_FULL_SHA:0:7}" >> $GITHUB_ENV
       - run: |
-          echo "DOCKER_DOCKER_IMAGE=${{ env.GIT_REPO }}-${{ env.GIT_BRANCH }}" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=${{ env.GIT_REPO }}-${{ env.GIT_BRANCH }}" >> $GITHUB_ENV
       - run: |
           echo ${{ env.GIT_REPO }}
           echo ${{ env.GIT_BRANCH }}
