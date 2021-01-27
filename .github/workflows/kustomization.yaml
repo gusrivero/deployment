@@ -14,14 +14,15 @@ jobs:
           fetch-depth: 0
       - run: |
           echo "GIT_REPO=$(echo '${{ github.event.client_payload.repository }}' | rev | cut -d'/' -f1 | rev)" >> $GITHUB_ENV
-          echo "GIT_BRANCH=$(echo '${{ github.event.client_payload.ref }}' | rev | cut -d'/' -f1 | rev)" >> $GITHUB_ENV
+          GIT_BRANCH=$(echo '${{ github.event.client_payload.ref }}' | rev | cut -d'/' -f1 | rev)
           GIT_FULL_SHA="${{ github.event.client_payload.sha }}"
+          echo "DEPLOY_ENV=${GIT_BRANCH/main/prod}" >> $GITHUB_ENV
           echo "GIT_SHA=${GIT_FULL_SHA:0:7}" >> $GITHUB_ENV
       - run: |
-          echo "DOCKER_IMAGE=${{ env.GIT_REPO }}-${{ env.GIT_BRANCH }}" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=${{ env.GIT_REPO }}-${{ env.DEPLOY_ENV }}" >> $GITHUB_ENV
       - run: |
           echo ${{ env.GIT_REPO }}
-          echo ${{ env.GIT_BRANCH }}
+          echo ${{ env.DEPLOY_ENV }}
           echo ${{ env.DOCKER_IMAGE }}
           echo ${{ env.GIT_SHA }}
       - uses: actions/checkout@v2
@@ -35,7 +36,7 @@ jobs:
       - run: |
           exit 1
 
-          if [[ "$(node -p '["dev", "prod"].includes("${{ env.GIT_BRANCH }}")')" == "false" ]]; then
+          if [[ "$(node -p '["dev", "prod"].includes("${{ env.DEPLOY_ENV }}")')" == "false" ]]; then
               exit 1
           fi
 
@@ -67,7 +68,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git checkout -b deploy/${{ env.DOCKER_IMAGE }}
           echo ${{ steps.docker_build.outputs.digest }}
-          cd ./hello-world/envs/${{ env.GIT_BRANCH }}/
+          cd ./hello-world/envs/${{ env.DEPLOY_ENV }}/
           pwd
           kustomize edit set image ${{ env.GIT_REPO }}=ghcr.io/trifoliumproj/deployment/${{ env.DOCKER_IMAGE }}@${{ steps.docker_build.outputs.digest }}
           cat kustomization.yaml
