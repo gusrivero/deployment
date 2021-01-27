@@ -34,15 +34,20 @@ jobs:
           submodules: true
           path: ./${{ env.GIT_REPO }}
       - run: |
+          REPOSITORIES=("api-gateway" konachan)
+          DEPLOY_ENVS=(dev prod)
+
+          if [[ ${REPOSITORIES[*]} =~ "${{ env.GIT_REPO }}" ]]; then
+          else
+            exit 1
+          fi
+
+          if [[ ${DEPLOY_ENVS[*]} =~ "${{ env.DEPLOY_ENV }}" ]]; then
+          else
+            exit 1
+          fi
+      - run: |
           exit 1
-
-          if [[ "$(node -p '["dev", "prod"].includes("${{ env.DEPLOY_ENV }}")')" == "false" ]]; then
-              exit 1
-          fi
-
-          if [[ "$(node -p '["api-gateway", "nh", "hc", "konachan"].includes("${{ env.GIT_REPO }}")')" == "false" ]]; then
-             exit 1
-          fi
       - uses: docker/setup-buildx-action@v1
       - uses: crazy-max/ghaction-docker-meta@v1
         id: docker_meta
