@@ -74,22 +74,14 @@ jobs:
           cd ./deployment
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git checkout -b deploy/${{ env.DOCKER_IMAGE }}
-          echo ${{ steps.docker_build.outputs.digest }}
+          git checkout -b deploy/${{ env.DOCKER_IMAGE }}-${{ env.GIT_SHA }}
           cd ./hello-world/envs/${{ env.DEPLOY_ENV }}/
-          pwd
           kustomize edit set image ${{ env.GIT_REPO }}=ghcr.io/trifoliumproj/deployment/${{ env.DOCKER_IMAGE }}@${{ steps.docker_build.outputs.digest }}
           cat kustomization.yaml
           git add kustomization.yaml
-          git commit -m 'deploy(${{ env.GIT_REPO }}): ${{ env.DOCKER_IMAGE }}@${{ steps.docker_build.outputs.digest }}'
+          git commit -m 'deploy(${{ env.GIT_REPO }}): ${{ env.DOCKER_IMAGE }}-${{ env.GIT_SHA }}'
       - uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.DODOCO_BOT_PAT }}
-          branch: deploy/${{ env.DOCKER_IMAGE }}
+          branch: deploy/${{ env.DOCKER_IMAGE }}-${{ env.GIT_SHA }}
           directory: "./deployment"
-      - uses: repo-sync/pull-request@v2
-        with:
-          source_branch: deploy/${{ env.DOCKER_IMAGE }}
-          destination_branch: "main"
-          github_token: ${{ secrets.DODOCO_BOT_PAT }}
-          pr_reviewer: "FleeingSunlight"
